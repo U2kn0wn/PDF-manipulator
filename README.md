@@ -52,7 +52,7 @@ python pdf_mainpulator [OPTIONS]
 ### 1. Split a PDF
 
 ```bash
-python split.py -p report.pdf -s 2 8
+python pdf_manipulator -p report.pdf -s 2 8
 ```
 
 Creates a PDF containing pages 2–8 of `report.pdf` named `split_report.pdf`.
@@ -62,7 +62,7 @@ Creates a PDF containing pages 2–8 of `report.pdf` named `split_report.pdf`.
 ### 2. Multi-Split a PDF
 
 ```bash
-python split.py -p report.pdf -sl 2,3 5,7 10,12
+python pdf_manipulator -p report.pdf -sl 2,3 5,7 10,12
 ```
 
 Creates multiple split files:
@@ -76,7 +76,7 @@ Creates multiple split files:
 ### 3. Merge PDFs
 
 ```bash
-python split.py -m file1.pdf file2.pdf file3.pdf -o merged.pdf
+python pdf_manipulator -m file1.pdf file2.pdf file3.pdf -o merged.pdf
 ```
 
 Merges the PDFs in the order specified and saves as `merged.pdf`.
@@ -86,7 +86,7 @@ Merges the PDFs in the order specified and saves as `merged.pdf`.
 ### 4. Password Protect a PDF
 
 ```bash
-python split.py -p report.pdf --encrypt --passw mypassword -o report_protected.pdf
+python pdf_manipulator -p report.pdf --encrypt --passw mypassword -o report_protected.pdf
 ```
 
 Encrypts `report.pdf` with password `mypassword` and saves as `report_protected.pdf`.

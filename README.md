@@ -16,12 +16,13 @@
 ## Requirements
 
 - Python 3.10+  
-- [pikepdf](https://pypi.org/project/pikepdf/)  
+- [pikepdf](https://pypi.org/project/pikepdf/) 
+- argparse 
 
 Install dependencies:
 
 ```bash
-pip install pikepdf
+pip install -r requirements.txt
 ````
 
 ---
@@ -29,7 +30,7 @@ pip install pikepdf
 ## Usage
 
 ```bash
-python split.py [OPTIONS]
+python pdf_mainpulator [OPTIONS]
 ```
 
 ### Arguments

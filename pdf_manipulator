@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+
+import argparse as ap
+import pikepdf as pp
+
+
+def parse_range(value):
+    start, end = map(int, value.split(","))
+    return [start,end]
+
+def argu():
+    par=ap.ArgumentParser(prog='pdf manipulator', description='Currently this can Split, and multisplit, working on merge and password protect')
+    par.add_argument('-s', '--split', nargs=2, type=int, metavar=('start', 'end'), help="this will split the pdf once from the starting page number(the lower number) to the ending page number (the higher page number) passed in argument")
+    par.add_argument('-sl', '--split_list', nargs='+', type=parse_range, metavar=('start,end'),help="this will split the file in multiple different splits as given in the list ex: -sl 2,3 5,7 7,100 this will make 3 split files")
+    par.add_argument('-p', '--pdfname', type=str, metavar='name', help="this is the name of the file you want to split")
+    par.add_argument('-m','--merge', nargs='+', help='pass the list of pdfs you want to merge in the same order they should show in the final pdf')
+    par.add_argument('-o','--output',type=str, help="name of the output file only works with merge option currently")
+    par.add_argument('--passw', type=str, metavar="password", help="add the password in this")
+    par.add_argument('--encrypt', action='store_true')
+    return par.parse_args()
+
+def merge(names: list, o: str):
+    merg_pdf = pp.Pdf.new()
+    for i in names:
+        with pp.Pdf.open(i) as pdf:
+            merg_pdf.pages.extend(pdf.pages)
+    merg_pdf.save(o)
+
+def encr(name: str, o: str, password: str):
+    with pp.Pdf.open(name) as pdf:
+        pdf.save(
+            o,
+            encryption=pp.Encryption(
+                user=password, 
+                owner=password, 
+                allow=pp.Permissions(extract=False, print_lowres=False, print_highres=False),
+                R=6
+                )
+                )
+
+def file_split(start: int, end: int, name: str, output: str):
+    with pp.Pdf.open(name) as pdf:
+        new_pdf = pp.Pdf.new()
+        for page in pdf.pages[(start-1):end]:
+            new_pdf.pages.append(page)
+        new_pdf.save(output)
+
+def main():
+    done="done"
+    args=argu()
+    pdf=args.pdfname
+    match True:
+        case _ if args.split:
+            if pdf is None:
+                print("-p pdf name is required, use -h for help")
+                exit()
+            arr=sorted(args.split)
+            file_split(arr[0],arr[1],args.pdfname, f"split_{args.pdfname}")
+            print(done)
+
+        case _ if args.split_list:
+            if pdf is None:
+                print("-p pdf name is required, use -h for help")
+                exit()
+            x=1
+            for i in args.split_list:
+                arr=sorted(i)
+                file_split(arr[0],arr[1],args.pdfname, f"split_{x}_{args.pdfname}")
+                x+=1
+                print(done)
+                
+        case _ if args.merge:
+            if args.output is None:
+                print("-o --output is required for this action")
+                exit()
+            merge(args.merge, args.output)
+            print(done)
+
+        case _ if args.encrypt:
+            name=args.pdfname
+            passw=args.passw
+            if name is None and passw is None and args.output is None:
+                print("password(--passw) file name (-p or --pdfname) is required for this action")
+                exit()
+            encr(name,args.output,passw)
+            print(done)
+
+        case _:
+            print ("use -h for getting help")
+
+
+if __name__ == '__main__':
+    main()

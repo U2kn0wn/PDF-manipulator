@@ -1,6 +1,3 @@
-Absolutely! Here’s the **entire README.md** in one Markdown block, ready to copy and paste:
-
-````markdown
 # PDF Manipulator CLI Tool
 
 **PDF Manipulator** is a simple Python command-line tool to **split**, **multi-split**, **merge**, and **password-protect** PDF files using [pikepdf](https://pypi.org/project/pikepdf/).  
